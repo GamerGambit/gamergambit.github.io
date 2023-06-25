@@ -8,6 +8,15 @@
         <p class="card-text">{{ post.description }}</p>
         {% endif %}
         <p class="card-text"><small class="text-body-secondary">{{ post.date | date: "%-d %B %Y" }}</small></p>
+
         <a href="{{ post.url }}" class="stretched-link"></a>
+
+        {% if post.tags.size > 0 %}
+        <div class="ignore-stretched-link d-sm-inline-block">
+            {% for tag in post.tags %}
+            <span class="badge bg-secondary">{{ tag }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
 </div>
