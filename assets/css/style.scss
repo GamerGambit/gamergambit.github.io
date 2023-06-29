@@ -2,7 +2,8 @@
 ---
 
 @import "{{ site.theme }}";
-@import "main";
+@import "bootstrap-vars";
+@import "bootstrap-5.3.0/scss/bootstrap.scss";
 
 .page-header
 {
