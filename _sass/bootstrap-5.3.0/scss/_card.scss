@@ -75,14 +75,14 @@
 }
 
 .card-title {
-  margin-bottom: var(--#{$prefix}card-title-spacer-y);
+  margin-bottom: var(--#{$prefix}card-title-spacer-y) !important;
   color: var(--#{$prefix}card-title-color);
 }
 
 .card-subtitle {
-  margin-top: calc(-.5 * var(--#{$prefix}card-title-spacer-y)); // stylelint-disable-line function-disallowed-list
-  margin-bottom: 0;
-  color: var(--#{$prefix}card-subtitle-color);
+  margin-top: calc(-.5 * var(--#{$prefix}card-title-spacer-y)) !important; // stylelint-disable-line function-disallowed-list
+  margin-bottom: 0 !important;
+  color: var(--#{$prefix}card-subtitle-color) !important;
 }
 
 .card-text:last-child {
