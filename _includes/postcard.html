@@ -19,9 +19,7 @@
             </h6>
             {% endif %}
 
-            {% if post.description %}
-            <p class="card-text">{{ post.description }}</p>
-            {% endif %}
+            <p class="card-text">{{ post.description | default: post.excerpt }}</p>
 
             <a href="{{ post.url }}" class="stretched-link"></a>
         </div>
