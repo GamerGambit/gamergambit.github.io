@@ -1,0 +1,78 @@
+---
+layout: post
+title:  "K2 101"
+date:   "2023-07-13"
+categories: idk2
+tags: unreal-engine k2
+description: "Introduction to Blueprint K2 nodes"
+---
+
+<div class="alert alert-info">
+    <h4 class="alert-heading">Prerequisites</h4>
+    <p>This series will cover how to create K2 nodes in C++ for Unreal Engine 5.</p>
+    <p class="mb-0">Before proceeding, this series will assume a solid foundation in C++ and good knowledge of the Unreal Engine C++ framework.</p>
+</div>
+
+---
+
+# What are K2 nodes?
+
+K2 nodes are the foundation of "Blueprints" in Unreal Engine 4 and 5. Any node that you can add into a Blueprint graph, has a K2 node behind it written in C++. Other graph editors have their own respective nodes, such as Control Rig, Niagara and MetaSounds, however K2 are specific to Blueprints.
+
+The simplest K2 node is probably the "Reroute" node.
+
+![Reroute node](/assets/img/reroute_node.png)
+
+The code behind this is dead simple since its purpose is purely aesthetic.
+
+{% highlight cpp %}
+// Copyright Epic Games, Inc. All Rights Reserved.
+class UK2Node_Knot : public UK2Node
+{
+   GENERATED_UCLASS_BODY()
+
+public:
+    virtual void AllocateDefaultPins() override;
+    virtual void ExpandNode(class FKismetCompilerContext& CompilerContext, UEdGraph* SourceGraph) override;
+    ...
+};
+{% endhighlight %}
+<figcaption class="blockquote-footer"><cite>Snippet from K2Node_Knot.hpp</cite></figcaption>
+
+Even though this is the simplest K2 node, it still overrides over a dozen functions from `UK2Node` and `UEdGraphNode` (which are the main parent classes for custom nodes), I'm going to focus on `AllocateDefaultPins` and `ExpandNode` as these are the bread and butter of K2 nodes, as most of the other functions control how your node looks and behaves in the graph.
+
+## AllocateDefaultPins
+As the name suggests, `AllocateDefaultPins` is responsible for creating input and output pins for the class. This function is called whenever `ReconstructNode` is called, which is usually called whenever state in the node is changed and pins need to be recreated.
+
+A good example of such state changes are when pins for structs are split/recombined.
+
+![Vector Split](/assets/img/vector_node_split.png)
+
+Then these pins are split/recombined, the split state is set and the node is reconstructed, which causes `AllocateDefaultPins` to be called which reads this state and creates additional pins if needed.
+
+## ExpandNode
+
+`ExpandNode` is the function that will make you question your own sanity. It's called whenever you compile the blueprint and is responsible for taking your single node entity in the node graph and expanding it to any intermediate nodes such as function calls and creating custom events, as well as any pin re-wiring needed for those intermediate nodes.
+
+A great example of node expansion is timelines. The single `Timeline` node, is expanded into a function call, plus 2 custom events.
+
+<div class="row">
+<div class="col-md" markdown="1">
+
+![Timeline Node](/assets/img/timeline_node.png)
+
+</div>
+<div class="col-md" markdown="1">
+
+![Timeline Node Expanded](/assets/img/timeline_node_expanded.png)
+
+</div>
+</div>
+
+For more complex nodes, the implementation of `ExpandNode` will eclipse the rest of the class and can be an absolute pain to diagnose and debug. Ask me how I know.
+
+# What next?
+
+K2 nodes are a great skill to have, however it's extra code to maintain and their application is relatively limited because there is usually an easier way, like Blueprint Function Libraries or Blueprint Macros.
+
+The next article in this series will cover how to create a bog standard K2 node.
