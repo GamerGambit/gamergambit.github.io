@@ -56,7 +56,7 @@ When these pins are split/recombined, the split state is set and the node is rec
 
 `ExpandNode` is the function that will make you question your own sanity. It's called whenever you compile the blueprint and is responsible for taking your single node entity in the node graph and expanding it to any intermediate nodes, such as function calls and custom events. It also does pin rewriring needed for those intermediate nodes.
 
-A great example of node expansion is timelines. The single `Timeline` node, is expanded into a function call and 2 custom events.
+A great example of node expansion is timelines. The single `Timeline` node is expanded into a function call and 2 custom events.
 
 <div class="row">
 <div class="col-md" markdown="1">
