@@ -15,8 +15,10 @@ description: "Introduction to Blueprint K2 nodes"
 
 ---
 
-# What are K2 nodes?
+# History
+Kismet is a node based visual scripting system. It was introduced with Unreal Engine 3 in 2006 and a new version (shortened to K2) was released with Unreal Engine 4 in 2014. The new version, K2,  is the focus of this series.
 
+# What are K2 nodes?
 K2 nodes are the foundation of "Blueprints" in Unreal Engine 4 and 5. Any node that you can add into a Blueprint graph has a K2 node behind it written in C++. Other graph editors have their own respective nodes, such as Control Rig, Niagara, and MetaSounds, however K2 are specific to Blueprints.
 
 The simplest K2 node is probably the "Reroute" node.
