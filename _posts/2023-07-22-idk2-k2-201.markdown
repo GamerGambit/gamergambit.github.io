@@ -19,14 +19,14 @@ Below are the files and contents you will need for your editor module. For more 
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class IDK2EditorTarget : TargetRules
+public class {Project}EditorTarget : TargetRules
 {
-	public IDK2EditorTarget( TargetInfo Target) : base(Target)
+	public {Project}EditorTarget( TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
-		ExtraModuleNames.AddRange(new string[] { "IDK2", "IDK2Editor" });
+		ExtraModuleNames.AddRange(new string[] { "{Project}", "{Project}Editor" });
 	}
 }
 {% endhighlight %}
