@@ -49,3 +49,8 @@
         }
     }
 }
+
+.main-content .highlight pre, .main-content pre
+{
+    border-radius: var(--bs-border-radius);
+}
