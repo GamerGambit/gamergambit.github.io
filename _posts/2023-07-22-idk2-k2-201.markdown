@@ -229,7 +229,7 @@ void UK2Node_Print::AllocateDefaultPins()
 <figcaption class="blockquote-footer"><cite>/Source/{Project}Editor/Private/K2Node_Print.cpp</cite></figcaption>
 
 ### CreatePin extra parameter
-Earlier I said that `CreatePin` takes **at least** 3 parameters yet for `TextColor` we have 4 parameters: `Direction`, `Category`, `PinSubCategoryObject`, and `Name`. For fundamental blueprint types such as integer, bool, and float the `PinSubCategoryObject` parameter is not needed. In fact it's not even needed for complex types like enum, struct, and object. This additional parameter is called `PinSubCategoryObject` which essentially tells the pin which type of the category we are after. In the case of `PC_Struct`, we tell the pin *which* struct we want to accept. If we did not provide a subcategory object for `TextColor` the pin would accept any struct type which is not what we want.
+Earlier I said that `CreatePin` takes **at least** 3 parameters yet for `TextColor` we have 4 parameters: `Direction`, `Category`, `PinSubCategoryObject`, and `Name`. For primitive blueprint types such as integer, bool, and float the `PinSubCategoryObject` parameter is not needed. In fact it's not even needed for complex types like enum, struct, and object. This additional parameter is called `PinSubCategoryObject` which essentially tells the pin which type of the category we are after. In the case of `PC_Struct`, we tell the pin *which* struct we want to accept. If we did not provide a subcategory object for `TextColor` the pin would accept any struct type which is not what we want.
 
 ## Verbosity Pin
 Our new node looks good but its missing a pin for verbosity; the entire reason we are making this node in the first place. Should be simple enough right?
