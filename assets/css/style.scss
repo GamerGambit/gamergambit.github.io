@@ -12,16 +12,40 @@
 
 .site-footer
 {
-        text-align: center;
+    text-align: center;
 }
 
 .card p.card-text:last-of-type
 {
-        margin: 0;
+    margin: 0;
 }
 
 .nav-link span
 {
-        text-align: right;
-        flex-grow: 1;
+    text-align: right;
+    flex-grow: 1;
+}
+
+#markdown-toc
+{
+    @extend .list-group;
+
+    padding-top: var(--bs-list-group-item-padding-y);
+    padding-bottom: var(--bs-list-group-item-padding-y);
+    border: var(--bs-list-group-border-width) solid var(--bs-list-group-border-color);
+    border-radius: var(--bs-border-radius);
+    margin-bottom: 1rem;
+
+    &, ul, ul ul, ul ul ul
+    {
+        @extend .list-group-flush;
+        padding-left: var(--bs-list-group-item-padding-x);
+        padding-right: var(--bs-list-group-item-padding-x);
+
+        li {
+            @extend .list-group-item;
+            border: none;
+            padding: 0;
+        }
+    }
 }
