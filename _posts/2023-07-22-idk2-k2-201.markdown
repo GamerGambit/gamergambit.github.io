@@ -223,7 +223,7 @@ void UK2Node_Print::AllocateDefaultPins()
 	CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Boolean, "bPrintToLog");
 	CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Struct, TBaseStructure<FLinearColor>::Get(), "TextColor");
 	CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Real, "Duration");
-	CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Name, "Name");
+	CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Name, "Key");
 }
 {% endhighlight %}
 <figcaption class="blockquote-footer"><cite>/Source/{Project}Editor/Private/K2Node_Print.cpp</cite></figcaption>
@@ -266,7 +266,7 @@ void UK2Node_Print::AllocateDefaultPins()
 	CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Boolean, "bPrintToLog");
 	CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Struct, TBaseStructure<FLinearColor>::Get(), "TextColor");
 	CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Real, "Duration");
-	CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Name, "Name");
+	CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Name, "Key");
 }
 {% endhighlight %}
 <figcaption class="blockquote-footer"><cite>/Source/{Project}Editor/Private/K2Node_Print.cpp</cite></figcaption>
