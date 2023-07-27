@@ -12,7 +12,7 @@ description: "Basic K2 Node"
 * TOC
 {:toc}
 
-In this article we are going to be implementing a custom K2 node. The node is going to provide print functionality identicle to the existing `Print String` blueprint node with the addition of verbosity like you would find in `UE_LOG`.
+In this article we are going to be implementing a custom K2 node. The node is going to provide print functionality identical to the existing `Print String` blueprint node with the addition of verbosity like you would find in `UE_LOG`.
 
 # Before we get started
 It's important to know that K2 nodes are only allowed in editor modules, not runtime modules. When a blueprint is compiled that contains your custom K2 node, `ExpandNode` is called and the result will be serialized as bytecode.If your project already contains an editor module you can use, feel free to skip the next section.
