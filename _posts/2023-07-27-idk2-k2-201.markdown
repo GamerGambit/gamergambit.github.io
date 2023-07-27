@@ -588,6 +588,6 @@ When implementing `ExpandNode` being able to see the abomination you have create
 # Wrapping Up
 While this K2 node is basic it contains a lot of code which can be painful to maintain especially if it needs to be revisited later on. Being able to create K2 nodes is an excellent technical skill to have, however their application is quite limited and we could have skipped this entire node altogether if we removed `BlueprintInternalUseOnly` from `PrintWithVerbosity` and let the editor create the node for us with all the pins; and many other potential use cases for K2 nodes can be worked around by using Blueprint Macros and Blueprint Function Libraries.
 
-The full code and working Unreal Engine 5 project for this article is available [here](https://github.com/GamerGambit/gamergambit.github.io/code/idk2-201)
+The full code and working Unreal Engine 5 project for this article is available [here](https://github.com/GamerGambit/gamergambit.github.io/tree/main/code/idk2-201)
 
 In the next article we will be covering how to implement an async K2 node.
