@@ -1,14 +1,5 @@
 // Copyright (c) Tyler Duffus
-#include "IDK2Editor.h"
 
-IMPLEMENT_MODULE(FIDK2Editor, IDK2Editor);
+#include "Modules/ModuleManager.h"
 
-void FIDK2Editor::StartupModule()
-{
-	//
-}
-
-void FIDK2Editor::ShutdownModule()
-{
-	//
-}
+IMPLEMENT_MODULE(FDefaultModuleImpl, IDK2Editor);

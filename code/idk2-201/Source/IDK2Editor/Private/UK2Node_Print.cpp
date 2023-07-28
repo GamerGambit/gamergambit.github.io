@@ -3,8 +3,8 @@
 #include "K2Node_Print.h"
 #include "PrintBPFL.h"
 
-#include "BlueprintNodeSpawner.h"
 #include "BlueprintActionDatabaseRegistrar.h"
+#include "BlueprintNodeSpawner.h"
 #include "K2Node_CallFunction.h"
 #include "KismetCompiler.h"
 
@@ -13,12 +13,12 @@
 	auto* dstPin = DestNode->FindPinChecked(Name); \
 	auto response = CompilerContext.MovePinLinksToIntermediate(*srcPin, *dstPin); \
 	if (!ensureMsgf(response.CanSafeConnect(), TEXT("%s"), *response.Message.ToString())) \
-		CompilerContext.MessageLog.Error(*FText::Format(NSLOCTEXT("UK2Node_Print", "InternalConnectionError", "@@: {0}"), response.Message).ToString(), this); \
+		CompilerContext.MessageLog.Error(*FString::Printf(TEXT("@@: {0}"), *response.Message.ToString()), this); \
 }
 
 void UK2Node_Print::AllocateDefaultPins()
 {
-	SetEnabledState(ENodeEnabledState::DevelopmentOnly, false);
+	SetEnabledState(ENodeEnabledState::DevelopmentOnly);
 	AdvancedPinDisplay = ENodeAdvancedPins::Hidden;
 
 	CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Exec, UEdGraphSchema_K2::PN_Execute);
@@ -86,15 +86,7 @@ void UK2Node_Print::ExpandNode(FKismetCompilerContext& CompilerContext, UEdGraph
 
 void UK2Node_Print::GetMenuActions(class FBlueprintActionDatabaseRegistrar& ActionRegistrar) const
 {
-	// actions get registered under specific object-keys; the idea is that 
-	// actions might have to be updated (or deleted) if their object-key is  
-	// mutated (or removed)... here we use the node's class (so if the node 
-	// type disappears, then the action should go with it)
 	UClass* ActionKey = GetClass();
-	// to keep from needlessly instantiating a UBlueprintNodeSpawner, first   
-	// check to make sure that the registrar is looking for actions of this type
-	// (could be regenerating actions for a specific asset, and therefore the 
-	// registrar would only accept actions corresponding to that asset)
 	if (ActionRegistrar.IsOpenForRegistration(ActionKey))
 	{
 		UBlueprintNodeSpawner* NodeSpawner = UBlueprintNodeSpawner::Create(GetClass());

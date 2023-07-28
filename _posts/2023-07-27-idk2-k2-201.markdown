@@ -61,33 +61,9 @@ public class {Project}Editor : ModuleRules
 <figcaption class="blockquote-footer"><cite>/Source/{Project}Editor/{Project}Editor.build.cs</cite></figcaption>
 
 {% highlight cpp %}
-#pragma once
-
 #include "Modules/ModuleManager.h"
 
-class F{Project}Editor : public IModuleInterface
-{
-public:
-    virtual void StartupModule() override;
-    virtual void ShutdownModule() override;
-};
-{% endhighlight %}
-<figcaption class="blockquote-footer"><cite>/Source/{Project}Editor/{Project}Editor.h</cite></figcaption>
-
-{% highlight cpp %}
-#include "{Project}Editor.h"
-
-IMPLEMENT_MODULE(F{Project}Editor, {Project}Editor);
-
-void F{Project}Editor::StartupModule()
-{
-    //
-}
-
-void F{Project}Editor::ShutdownModule()
-{
-    //
-}
+IMPLEMENT_MODULE(FDefaultModuleImpl, {Project}Editor);
 {% endhighlight %}
 <figcaption class="blockquote-footer"><cite>/Source/{Project}Editor/{Project}Editor.cpp</cite></figcaption>
 
@@ -130,25 +106,18 @@ public:
 
 void UK2Node_Print::AllocateDefaultPins()
 {
-    //
+    // Stub we implement later
 }
 
 void UK2Node_Print::ExpandNode(FKismetCompilerContext& CompilerContext, UEdGraph* SourceGraph)
 {
     Super::ExpandNode(CompilerContext, SourceGraph);
+    // Stub we implement later
 }
 
 void UK2Node_Print::GetMenuActions(class FBlueprintActionDatabaseRegistrar& ActionRegistrar) const
 {
-    // actions get registered under specific object-keys; the idea is that 
-    // actions might have to be updated (or deleted) if their object-key is  
-    // mutated (or removed)... here we use the node's class (so if the node 
-    // type disappears, then the action should go with it)
     UClass* ActionKey = GetClass();
-    // to keep from needlessly instantiating a UBlueprintNodeSpawner, first   
-    // check to make sure that the registrar is looking for actions of this type
-    // (could be regenerating actions for a specific asset, and therefore the 
-    // registrar would only accept actions corresponding to that asset)
     if (ActionRegistrar.IsOpenForRegistration(ActionKey))
     {
         UBlueprintNodeSpawner* NodeSpawner = UBlueprintNodeSpawner::Create(GetClass());
@@ -189,7 +158,7 @@ FText UK2Node_Knot::GetNodeTitle(ENodeTitleType::Type TitleType) const
 <figcaption class="blockquote-footer"><cite>Snippet from K2Node_Knot.hpp</cite></figcaption>
 
 ## GetMenuActions
-This function is responsible for actually displaying your node in the right-click menu (Actions Menu) and making it spawn into the blueprint graph when you select it. The implementation shown is the minimum you need to get your now showing in the Actions Menu and spawning it into the graph. Why this isnt the default implementation in `UK2Node` we will never know.
+This function is responsible for actually displaying your node in the right-click menu (Actions Menu) and making it spawn into the blueprint graph when you select it. The implementation shown is the minimum you need to get your node showing up in the Actions Menu and spawning it into the graph. Why this isnt the default implementation in `UK2Node` we will never know.
 
 ## Out first node
 Thats the basic implementation for our first K2 node. It does absolutely nothing but its ours and we made it.
@@ -233,7 +202,7 @@ void UK2Node_Print::AllocateDefaultPins()
 <figcaption class="blockquote-footer"><cite>/Source/{Project}Editor/Private/K2Node_Print.cpp</cite></figcaption>
 
 ### CreatePin extra parameter
-Earlier I said that `CreatePin` takes **at least** 3 parameters yet for `TextColor` we have 4 parameters: `Direction`, `Category`, `PinSubCategoryObject`, and `Name`. For primitive blueprint types such as integer, bool, and float the `PinSubCategoryObject` parameter is not needed. In fact it's not even needed for complex types like enum, struct, and object. This additional parameter is called `PinSubCategoryObject` which essentially tells the pin which type of the category we are after. In the case of `PC_Struct`, we tell the pin *which* struct we want to accept. If we did not provide a subcategory object for `TextColor` the pin would accept any struct type which is not what we want.
+Earlier I said that `CreatePin` takes **at least** 3 parameters yet for `TextColor` we have 4 parameters: `Direction`, `Category`, `PinSubCategoryObject`, and `Name`. For primitive blueprint types such as integer, bool, and float the `PinSubCategoryObject` parameter is not needed. In fact it's technically not even needed for complex types like enum, struct, and object. This additional parameter is called `PinSubCategoryObject` which essentially tells the pin which type of the category we are after. In the case of `PC_Struct`, we tell the pin *which* struct we want to accept. If we did not provide a subcategory object for `TextColor` the pin would accept any struct type which is not what we want.
 
 ## Verbosity Pin
 Our new node looks good but its missing a pin for verbosity; the entire reason we are making this node in the first place. Should be simple enough right?
@@ -275,6 +244,11 @@ void UK2Node_Print::AllocateDefaultPins()
 {% endhighlight %}
 <figcaption class="blockquote-footer"><cite>/Source/{Project}Editor/Private/K2Node_Print.cpp</cite></figcaption>
 
+<div class="alert alert-info" role="alert">
+    <h4 class="alert-heading">PC_Real vs PC_Float/PC_Double and PC_Byte vs PC_Enum</h4>
+    <p class="mb-0" markdown="1">If you have done a bit of research on the pin categories, you are probably wondering why we are using `PC_Byte` instead of `PC_Enum` for our enum pin and `PC_Real` instead of `PC_Float` or `PC_Double` for the duration pin. The simple answer is that `PC_Enum`, `PC_Float`, and `PC_Double` do nothing. `FNodeFactory::CreateK2PinWidget` simply does not create the expected pin types given those categories so you end up with a generic `SGraphPin` which is unusable.</p>
+</div>
+
 Just like that we have a neat looking `Print String with Verbosity` node that looks like it does what it says:
 
 <div class="row">
@@ -285,9 +259,6 @@ Just like that we have a neat looking `Print String with Verbosity` node that lo
 ![Print with Verbosity with expanded enum](/assets/img/printv_enumexpanded.png)
 </div>
 </div>
-
-### PC_Real vs PC_Float/PC_Double and PC_Byte vs PC_Enum
-If you have done a bit of research on the pin categories, you are probably wondering why we are using `PC_Byte` instead of `PC_Enum` for our enum pin and `PC_Real` instead of `PC_Float` or `PC_Double` for the duration pin. The simple answer is that `PC_Enum`, `PC_Float`, and `PC_Double` do nothing. `FNodeFactory::CreateK2PinWidget` simply does not create the expected pin types given those categories so you end up with a generic `SGraphPin` which is unusable.
 
 # Node Expansion
 Now that we have a node that looks like it does something, let's actually make it do something. If you try to compile the blueprint right now, you will be greeted with this:
@@ -314,40 +285,20 @@ Right now your IDE is probably yelling at you because it doesnt know what `EPrin
 Due to `UE_LOG` being a macro and `UE_LOGFMT` using verbosity as a template parameter the implementation for `PrintWithVerbosity` is going to be a ... less than desirable but it will work. We basically need to switch on `InVerbosity` and make calls to `UE_LOG` for each case passing in the other parameters.
 
 {% highlight cpp %}
-#define CALL_UE_LOG(Verbosity) UE_LOG(LogBlueprintUserMessages, Verbosity, TEXT("%s"), *InString)
+#define ADD_VERBOSITY_CASE(Verbosity) case EPrintLogVerbosity::Verbosity: UE_LOG(LogBlueprintUserMessages, Verbosity, TEXT("%s"), *InString); break;
 void UPrintBPFL::PrintWithVerbosity(const FString& InString, EPrintLogVerbosity InVerbosity, bool bPrintToScreen, bool bPrintToLog, FLinearColor TextColor, float Duration, FName Key)
 {
     if (bPrintToLog)
     {
         switch (InVerbosity)
         {
-        case EPrintLogVerbosity::Fatal:
-            CALL_UE_LOG(Fatal);
-            break;
-
-        case EPrintLogVerbosity::Error:
-            CALL_UE_LOG(Error);
-            break;
-
-        case EPrintLogVerbosity::Warning:
-            CALL_UE_LOG(Warning);
-            break;
-
-        case EPrintLogVerbosity::Display:
-            CALL_UE_LOG(Display);
-            break;
-
-        case EPrintLogVerbosity::Log:
-            CALL_UE_LOG(Log);
-            break;
-
-        case EPrintLogVerbosity::Verbose:
-            CALL_UE_LOG(Verbose);
-            break;
-
-        case EPrintLogVerbosity::VeryVerbose:
-            CALL_UE_LOG(VeryVerbose);
-            break;
+            ADD_VERBOSITY_CASE(Fatal);
+            ADD_VERBOSITY_CASE(Error);
+            ADD_VERBOSITY_CASE(Warning);
+            ADD_VERBOSITY_CASE(Display);
+            ADD_VERBOSITY_CASE(Log);
+            ADD_VERBOSITY_CASE(Verbose);
+            ADD_VERBOSITY_CASE(VeryVerbose);
 
         default:
             checkNoEntry();
@@ -361,6 +312,7 @@ void UPrintBPFL::PrintWithVerbosity(const FString& InString, EPrintLogVerbosity 
         GEngine->AddOnScreenDebugMessage(InnerKey, Duration, TextColor.ToFColor(true), InString);
     }
 }
+#undef ADD_VERBOSITY_CASE
 {% endhighlight %}
 
 ## ExpandNode
@@ -382,7 +334,7 @@ Now that we have our intermediate node that will actually call the function we n
 * `FKismetCompilerContext::MovePinLinksToIntermediate` which will move all pin connections from `PinA` to `PinB` for use with pins with the same direction.
 * `UEdGraphSchema::TryCreateConnection` used to create a new connection between 2 pins of opposing directions.
 
-We will only be `MovePinLinksToIntermediate` which is mostly used for moving pin connections from our K2 node pins to our intermediate node pins and we will need to call this function for both exec pins plus all function inputs. In order to use it we need to give it `UEdGraphPin&` which we need to get using one of the `FindPin` functions to find each pin on `UK2Node_Print` and `UK2Node_CallFunction` by name. I would recommend using `FindPinChecked` unless you either don't care or handle when the pin is not found.
+We will only be using `MovePinLinksToIntermediate` which is mostly used for moving pin connections from our K2 node pins to our intermediate node pins and we will need to call this function for both exec pins plus all function inputs. In order to use it we need to give it `UEdGraphPin&` which we need to get using one of the `FindPin` functions to find each pin on `UK2Node_Print` and `UK2Node_CallFunction` by name. I would recommend using `FindPinChecked` unless you either don't care or handle when the pin is not found.
 
 <div class="alert alert-info">
     <p class="mb-0" markdown="1">Most of the built-in K2 nodes will supply helper functions to get specific pins. e.g. `UK2Node_CallFunction` provides `GetExecPin` and `GetThenPin` which is the equivalent of calling `UK2Node_CallFunction::FindPin(UEGraphSchema_K2::PN_Execute)` and `UK2Node_CallFunction::FindPin(UEdGraphSchema_K2::PN_Then)` respectively.
@@ -459,7 +411,7 @@ We can make a single macro to wrap all this up nicely:
     auto* dstPin = DestNode->FindPinChecked(Name); \
     auto response = CompilerContext.MovePinLinksToIntermediate(*srcPin, *dstPin); \
     if (!ensureMsgf(response.CanSafeConnect(), TEXT("%s"), *response.Message.ToString())) \
-        CompilerContext.MessageLog.Error(*FText::Format(NSLOCTEXT("UK2Node_Print", "InternalConnectionError", "@@: {0}"), response.Message).ToString(), this); \
+        CompilerContext.MessageLog.Error(*FString::Printf(TEXT("@@: {0}"), *response.Message.ToString()), this); \
 }
 
 ...
@@ -500,63 +452,46 @@ Directions are not compatible
 # Finishing Touches
 If you try to compile, you may be met with an error about `''` being an invalid enumerant of `EPrintLogVerbosity`. This is because the default value for this pin is empty. If you change the value for `InVerbosity` this error will go away but this is a terrible user experience so lets put the finishing touches on our node.
 
+In the following sections we will be operating on `UEdGraphPin` which is returned from `CreatePin`.
+
 ## Pin Defaults
-When we create a `Print String` node, it's populated with some useful defaults and ours isnt. Luckily for us this is a pretty trivial fix. Pin defaults come in 3 types: `FString`, `FText` and `UObject`. For our node we will only be using the `FString` type which is accessible with `UEdGraphPin::DefaultValue`. You may notice that we only have 1 actual string pin, `InString`, while the rest are ... not. In order to set these defaults, we need string representations of the types for these pins. For `InVerbosity` its the name of the enum we want to use as the default and for everything else we will use either the `ToString` member function or `LexToString`.
+When we create a `Print String` node, it's populated with some useful defaults and ours isnt. Luckily for us this is a pretty trivial fix. Pin defaults come in 3 types: `FString`, `FText` and `UObject`. For our node we will only be using the `FString` type which is accessible with `UEdGraphPin::DefaultValue`. You may notice that we only have 1 actual string pin, `InString` while the rest are ... not. In order to set these defaults, we need string representations of the types for these pins. For `InVerbosity` its the name of the enum we want to use as the default and for everything else we will use either the `ToString` member function or `LexToString`.
 
 ## Advanced Pins
 Right now we have all of our pins visible all the time. This can be quite annoying since theres no way to hide them if we dont need to see them and the node takes up quite a bit of space. Luckily for us this is trivial to add. By default `UEdGraphPin` will hide advanced pins so inside of `AllocateDefaultPins` we just need to set `AdvancedPinDisplay = ENodeAdvancedPins::Hidden;` which will collapse the advanced view initially. For each pin that we want to be hidden with the advanced arrow, we just need to set `UEdGraphPin::bAdvancedView = true;`
 
 ## Development Only Banner
-Debug/Development nodes like `Print String` show a `Development Only` banner. This effectively treats the node as "disabled" in non-editor builds and is enabled with `SetEnabledState(ENodeEnabledState::DevelopmentOnly, false);`.
+Debug/Development nodes like `Print String` show a `Development Only` banner. This effectively treats the node as "disabled" in non-editor builds and is enabled with `SetEnabledState(ENodeEnabledState::DevelopmentOnly);`.
 
-# Putting it Together
+## Putting it Together
 Everything combined leaves us with a custom K2 node that rivals `Print String`.
 
 {% highlight cpp %}
 void UK2Node_Print::AllocateDefaultPins()
 {
-	SetEnabledState(ENodeEnabledState::DevelopmentOnly, false);
-	AdvancedPinDisplay = ENodeAdvancedPins::Shown;
+    SetEnabledState(ENodeEnabledState::DevelopmentOnly);
+    AdvancedPinDisplay = ENodeAdvancedPins::Hidden;
 
-	CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Exec, UEdGraphSchema_K2::PN_Execute);
-	CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Exec, UEdGraphSchema_K2::PN_Then);
+    CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Exec, UEdGraphSchema_K2::PN_Execute);
+    CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Exec, UEdGraphSchema_K2::PN_Then);
 
-	CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_String, "InString")->DefaultValue = TEXT("Hello");
+    CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_String, "InString")->DefaultValue = TEXT("Hello");
 
-	{
-		auto* pin = CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Byte, StaticEnum<EPrintLogVerbosity>(), "InVerbosity");
-		pin->DefaultValue = StaticEnum<EPrintLogVerbosity>()->GetNameStringByIndex(3); // Default to `Display`
-		pin->bAdvancedView = true;
-	}
-	{
-		auto* pin = CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Boolean, "bPrintToScreen");
-		pin->DefaultValue = LexToString(true);
-		pin->bAdvancedView = true;
-	}
+    auto createAdvInputPin = [this](FName Category, FName Name, FString Default, UObject* Object = nullptr)
+    {
 
-	{
-		auto* pin = CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Boolean, "bPrintToLog");
-		pin->DefaultValue = LexToString(true);
-		pin->bAdvancedView = true;
-	}
+        auto* pin = CreatePin(EGPD_Input, Category, Object, Name);
+        pin->DefaultValue = Default;
+        pin->bAdvancedView = true;
+    };
 
-	{
-		auto* pin = CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Struct, TBaseStructure<FLinearColor>::Get(), "TextColor");
-		pin->DefaultValue = FLinearColor::Blue.ToString();
-		pin->bAdvancedView = true;
-	}
-
-	{
-		auto* pin = CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Real, "Duration");
-		pin->DefaultValue = LexToString(2.0f);
-		pin->bAdvancedView = true;
-	}
-
-	{
-		auto* pin = CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Name, "Key");
-		pin->DefaultValue = LexToString(NAME_None);
-		pin->bAdvancedView = true;
-	}
+    UEnum* VerbosityEnum = StaticEnum<EPrintLogVerbosity>();
+    createAdvInputPin(UEdGraphSchema_K2::PC_Byte, "InVerbosity", VerbosityEnum->GetNameStringByIndex(3), VerbosityEnum);
+    createAdvInputPin(UEdGraphSchema_K2::PC_Boolean, "bPrintToScreen", LexToString(true));
+    createAdvInputPin(UEdGraphSchema_K2::PC_Boolean, "bPrintToLog", LexToString(true));
+    createAdvInputPin(UEdGraphSchema_K2::PC_Struct, "TextColor", FLinearColor::Blue.ToString(), TBaseStructure<FLinearColor>::Get());
+    createAdvInputPin(UEdGraphSchema_K2::PC_Real, "Duration", LexToString(2.0f));
+    createAdvInputPin(UEdGraphSchema_K2::PC_Name, "Key", LexToString(NAME_None));
 }
 {% endhighlight %}
 <figcaption class="blockquote-footer"><cite>/Source/{Project}Editor/Private/K2Node_Print.cpp</cite></figcaption>
