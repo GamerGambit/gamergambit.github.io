@@ -525,4 +525,6 @@ While this K2 node is basic it contains a lot of code which can be painful to ma
 
 The full code and working Unreal Engine 5 project for this article is available [here](https://github.com/GamerGambit/gamergambit.github.io/tree/main/code/idk2-201)
 
+Special thanks to Daekesh for taking the time to proof this article.
+
 In the next article we will be covering how to implement an async K2 node.

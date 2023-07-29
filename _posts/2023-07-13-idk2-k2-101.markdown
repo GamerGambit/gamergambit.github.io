@@ -77,4 +77,6 @@ For more complex nodes, the implementation of `ExpandNode` will eclipse the rest
 
 K2 nodes are a great skill to have, however it's extra code to maintain and their application is relatively limited because there is usually an easier way, such as Blueprint Function Libraries and Blueprint Macros.
 
+Special thanks to Daekesh for taking the time to proof this article.
+
 The next article in this series will cover how to create a bog standard K2 node.
