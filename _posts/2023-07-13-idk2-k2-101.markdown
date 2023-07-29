@@ -15,6 +15,19 @@ description: "Introduction to Blueprint K2 nodes"
 
 ---
 
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    <li class="page-item disabled">
+      <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item"><a class="page-link" href="{% link _posts/2023-07-27-idk2-k2-201.markdown %}">2</a></li>
+    <li class="page-item">
+      <a class="page-link" href="{% link _posts/2023-07-27-idk2-k2-201.markdown %}">Next</a>
+    </li>
+  </ul>
+</nav>
+
 # History
 Kismet is a node based visual scripting system. It was introduced with Unreal Engine 3 in 2006 and a new version (shortened to K2) was released with Unreal Engine 4 in 2014. The new version, K2,  is the focus of this series.
 
@@ -79,4 +92,4 @@ K2 nodes are a great skill to have, however it's extra code to maintain and thei
 
 Special thanks to Daekesh for taking the time to proof this article.
 
-The next article in this series will cover how to create a bog standard K2 node.
+The [next article]({% link _posts/2023-07-27-idk2-k2-201.markdown %}) in this series will cover how to create a bog standard K2 node.

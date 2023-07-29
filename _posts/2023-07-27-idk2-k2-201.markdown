@@ -7,6 +7,19 @@ tags: unreal-engine k2
 description: "Basic K2 Node"
 ---
 
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    <li class="page-item">
+      <a class="page-link" href="{% link _posts/2023-07-13-idk2-k2-101.markdown %}">Previous</a>
+    </li>
+    <li class="page-item"><a class="page-link" href="{% link _posts/2023-07-13-idk2-k2-101.markdown %}">1</a></li>
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item">
+      <a class="page-link disabled" href="#" tabindex="-1" aria-disabled="true">Next</a>
+    </li>
+  </ul>
+</nav>
+
 # Chapters
 {:.no_toc}
 * TOC
@@ -129,7 +142,7 @@ void UK2Node_Print::GetMenuActions(class FBlueprintActionDatabaseRegistrar& Acti
 {% endhighlight %}
 <figcaption class="blockquote-footer"><cite>/Source/{Project}Editor/Private/K2Node_Print.cpp</cite></figcaption>
 
-Theres a little bit to unpack here. We found out in the previous article what `AllocateDefaultPins`and `ExpandNode` do, so lets cover some of the new functions here.
+Theres a little bit to unpack here. We found out in the [previous article]({% link _posts/2023-07-13-idk2-k2-101.markdown %}) what `AllocateDefaultPins`and `ExpandNode` do, so lets cover some of the new functions here.
 
 ## GetNodeTitleColor
 As the function name suggests, this function is responsible for coloring the node. `FLinearColor` is normalized so `0` is black and `1` is white. For this node, we are going with a nice [hot pink color](https://www.colorhexa.com/ff19ff).
