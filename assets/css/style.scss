@@ -76,3 +76,20 @@
         filter: invert(0.75);
     }
 }
+
+pre
+{
+    background-color: transparent !important;
+    border-color: var(--bs-border-color) !important;
+
+    & > code:not([data-lang])
+    {
+        background-color: transparent !important;
+    }
+}
+
+code[class*="language-"],
+pre[class*="language-"] {
+    // The only difference between this and prismjs is that ive removed "Fira Code" since its ligatures were breaking my code
+    font-family: "Fira Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace !important;
+}
