@@ -59,9 +59,9 @@
 {
     background-color: transparent;
 
-    & > pre
+    div.alert &
     {
-        border-color: var(--bs-border-color);
+        background: var(--bs-body-bg);
     }
 }
 
