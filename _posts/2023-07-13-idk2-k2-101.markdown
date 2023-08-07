@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "K2 101"
+title:  "IDK2 101"
 date:   "2023-07-13"
 categories: idk2
 tags: unreal-engine k2
@@ -67,7 +67,6 @@ A good example of such state changes are when pins for structs are split/recombi
 When these pins are split/recombined, the split state is set and the node is reconstructed. This causes `AllocateDefaultPins` to be called which reads the node state and creates additional pins if needed.
 
 ## ExpandNode
-
 `ExpandNode` is the function that will make you question your own sanity. It's called whenever you compile the blueprint and is responsible for taking your single node entity in the node graph and expanding it to any intermediate nodes, such as function calls and custom events. It also does pin rewriring needed for those intermediate nodes.
 
 A great example of node expansion is timelines. The single `Timeline` node is expanded into a function call and 2 custom events.
