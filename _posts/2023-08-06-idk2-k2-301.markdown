@@ -40,9 +40,7 @@ In this article we are going to implement a K2 node that does a HTTP Get request
 The foundation of this behavior is in `UK2Node_BaseAsyncTask` which is arguable the easiest K2 node to subclass. You give it a factory function name, factory class, and a proxy class and it will give you a node that has input and output execution pins, and an output execution pin for each dynamic multicast delegate.
 
 ## Latent vs Async
-Aync is used to define a task that executes independently from the main thread and not block it. While the latent blueprint nodes don't block, they are not asynchronous as they are ticked with the game thread in the background.
-
-While the title of this article might be slightly misleading, Epic called it `UK2Node_BaseAsyncTask` so thats what I call them. For the purposes of this article, the 2 terms are interchangable.
+Latent and Async are both used to describe a task that can execute in a non-blocking way. While the terms are interchangable latent is primarily used in Blueprints and async is primarily used in C++.
 
 # Subclassing UK2Node_BaseAsyncTask
 As mentioned above, `UK2Node_BaseAsyncTask` is probably the easiest way to make a K2 node. Internally it handles pin allocation, node expansion, gives us the clock face icon denoting its latent, and even puts our node in the proper category in the actions menu, and actually implements `GetMenuActions` for us.
@@ -197,7 +195,7 @@ First a function call to our factory function is made then for each of our deleg
 * `HideThen` will not create a `then` pin on the node meaning the only output execution pins will be for delegates.
 
 # HTTP Request
-I almost forgot to actually implement a get request for our node so lets get that sorted. We need to add the `HTTP` module to our `{Project}.build.cs` and change our factory function to this:
+I almost forgot to actually implement a get request for our node so lets get that sorted. We need to add the `HTTP` module to our `{Project}.build.cs` and make a new Get request. We bind a lambda to the `OnProcessRequestComplete` delegate to check that the [HTTP response code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) is good and broadcast our `OnComplete` delegate.
 
 {% highlight cpp %}
 #include "HttpReqProxy.h"
