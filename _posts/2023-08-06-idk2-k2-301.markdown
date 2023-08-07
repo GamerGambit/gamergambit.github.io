@@ -35,22 +35,24 @@ If you have used Blueprints for any amount of time you have almost certainly com
 
 If you look at this Delay node and think "I would love to know how to make one of these" then let this article curb that enthusiam for you.
 
-In this article we are going to implement a K2 node that does a HTTP Get request.
+In this article we are going to implement a K2 node that does an HTTP Get request.
 
-The foundation of this behavior is in `UK2Node_BaseAsyncTask` which is arguable the easiest K2 node to subclass. You give it a factory function name, factory class, and a proxy class and it will give you a node that has input and output execution pins, and an output execution pin for each dynamic multicast delegate.
+The foundation of this behavior is in `UK2Node_BaseAsyncTask`, which is arguable the easiest K2 node to subclass. You give it a factory function name, factory class, and a proxy class and it will give you a node that has input and output execution pins, and an output execution pin for each dynamic multicast delegate.
 
 ## Latent vs Async
-Latent and Async are both used to describe a task that can execute in a non-blocking way. While the terms are interchangable latent is primarily used in Blueprints and async is primarily used in C++.
+Latent and Async are both used to describe a task that can execute in a non-blocking way. While the terms are interchangeable when it comes to K2 nodes, latent is primarily used in Blueprints and async is primarily used in C++.
 
 # Subclassing UK2Node_BaseAsyncTask
-As mentioned above, `UK2Node_BaseAsyncTask` is probably the easiest way to make a K2 node. Internally it handles pin allocation, node expansion, gives us the clock face icon denoting its latent, and even puts our node in the proper category in the actions menu, and actually implements `GetMenuActions` for us.
+As mentioned above, `UK2Node_BaseAsyncTask` is probably the easiest way to make a K2 node. Internally it handles pin allocation, node expansion, gives us the clock face icon denoting its latent, puts our node in the proper category in the actions menu, and even implements `GetMenuActions` for us.
 
-The only 2 things we need in order to make an asyc node is to make a "proxy" class which is created by the K2 node and actually does runtime stuff, and subclass `UK2Node_BaseAsyncTask` so we can pass in our proxy class.
+The only 2 things we need in order to make an asyc node is to make a "proxy" class (which is created by the K2 node and actually does runtime stuff) and to subclass `UK2Node_BaseAsyncTask` (so we can pass in our proxy class).
 
 ## Proxy Class
-The proxy class is a `UObject` that holds dynamic multicast delegates since thats the entire purpose of this node plus whatever other data and functions your node needs to actually do anything.
+The proxy class is a `UObject` that holds dynamic multicast delegates plus whatever other data and functions your node needs to actually do anything.
 
 The proxy class for our HTTP Get request is pretty simple. We need a factory function to create our proxy object, the url for the request, and a delegate for when the request is done.
+
+The name of the factory function is what `UK2Node_BaseAsynTask` uses to name our node and can be overwritten using the [DisplayName meta attribute](https://benui.ca/unreal/ufunction/#displayname).
 
 {% highlight cpp %}
 #pragma once
@@ -79,7 +81,7 @@ public:
 {% endhighlight %}
 <figcaption class="blockquote-footer"><cite>/Source/{Project}/Classes/HttpReqProxy.h</cite></figcaption>
 
-The source for this is just the implementation of `CreateProxyObjectForHTTPRequest`. The name of this function is *sort* of important since it's what `UK2Node_BaseAsynTask` uses to name our node which can be overwritten using the [DisplayName meta](https://benui.ca/unreal/ufunction/#displayname) attribute. We use the `RF_StrongRefOnFrame` flag to stop shiny new proxy object getting garbage collected since we don't store our proxy object anywhere.
+The source for this is just the implementation of `CreateProxyObjectForHTTPRequest`. We use the `RF_StrongRefOnFrame` flag to stop shiny new proxy object getting garbage collected since we don't store our proxy object anywhere.
 
 <div class="alert alert-info">
 <p markdown="1">Using `RF_StrongRefOnFrame` on the proxy object is noted in the engine source</p>
@@ -142,14 +144,14 @@ UK2Node_HttpReq::UK2Node_HttpReq(const FObjectInitializer& ObjectInitializer)
 {% endhighlight %}
 <figcaption class="blockquote-footer"><cite>/Source/{Project}Editor/Private/K2Node_HttpReq.cpp</cite></figcaption>
 
-Just like that we have a nonfunctional async/latent node which was significantly easier to get in the graph than a regular K2 node.
+And just like that we have a nonfunctional async/latent node, which was significantly easier to get in the graph than a regular K2 node.
 
 ![HTTP node](/assets/img/httpnode.png)
 
-Something doesn't look quite right. In our `UHttpReqProxy` class we have a data member: `FString URL`. There is no pins on the node for this input, so lets fix that.
+Something doesn't look quite right. In our `UHttpReqProxy` class we have a data member: `FString URL`. There are no pins on the node for this input, so lets fix that.
 
 ## Data In, Data Out
-In order to get data in and out of our node we need to make full use of our factory function `CreateProxyObjectForHTTPRequest`. `UK2Node_BaseAsyncTask` uses `UK2Node_CallFunction` node to get pins on our factory function and allocate them on the node. To get our URL pin showing on the node we just need to add it as an input to the factory function.
+In order to get data in and out of our node we need to make full use of our factory function `CreateProxyObjectForHTTPRequest`. `UK2Node_BaseAsyncTask` automatically uses the parameters of our `CreateProxyObjectForHTTPRequest` function to generate the pins. To get our URL pin showing on the node we just need to add it as an input to the factory function.
 
 {% highlight cpp %}
 static UHttpReqProxy* CreateProxyObjectForHTTPRequest(FString InURL)
@@ -169,7 +171,7 @@ UHttpReqProxy* UHttpReqProxy::CreateProxyObjectForHTTPRequest(FString InURL)
 
 ![HTTP node with Data](/assets/img/httpnode_data.png)
 
-We can extend this behavior to our delegate too. If we specify that our delegate has parameters they will be allocated pins on our node automatically. If we have multiple delegates with the same signature, the data pins will be shared between the delegate's execution pins.
+We can extend this behavior to our delegate too. If we add parameters to our delegate they will be added as output execution pins automatically. If we have multiple delegates with the same signature, the data pins will be shared between the delegate's execution pins.
 
 <div class="row">
 <div class="col-md" markdown="1">
@@ -187,15 +189,15 @@ Lets compile a Blueprint with our node and see what gets created.
     <div class="col-md"><iframe class="w-100" style="height: 41.2rem !important;" src="https://blueprintue.com/render/zg4pwyeg/" scrolling="no" allowfullscreen></iframe></div>
 </div>
 
-First a function call to our factory function is made then for each of our delegates a custom event is created and bound to the delegate.
+First a function call to our factory function is made and then, for each of our delegates, a custom event is created and bound to.
 
 # Metadata
 `UK2Node_BaseAsyncTask` uses 2 metadata tags on the proxy class to control extra functionality within the node:
 * `ExposedAsyncProxy` will add an extra pin for the created proxy object named `AsyncTaskProxy` which can be overwritten by giving a value (`meta = (ExposedAsyncProxy = "My Proxy Object")`).
-* `HideThen` will not create a `then` pin on the node meaning the only output execution pins will be for delegates.
+* `HideThen` will not create a `then` pin on the node meaning that the only output execution pins will be for the delegates.
 
 # HTTP Request
-I almost forgot to actually implement a get request for our node so lets get that sorted. We need to add the `HTTP` module to our `{Project}.build.cs` and make a new Get request. We bind a lambda to the `OnProcessRequestComplete` delegate to check that the [HTTP response code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) is good and broadcast our `OnComplete` delegate.
+I almost forgot to actually implement a get request for our node, so lets get that sorted. We need to add the `HTTP` module to our `{Project}.build.cs` and make a new Get request. We bind a lambda to the `OnProcessRequestComplete` delegate to check that the [HTTP response code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) is good and then broadcast our `OnComplete` delegate.
 
 {% highlight cpp %}
 #include "HttpReqProxy.h"
@@ -233,10 +235,12 @@ UHttpReqProxy* UHttpReqProxy::CreateProxyObjectForHTTPRequest(FString InURL)
 # Wrapping Up
 As mentioned twice now, `UK2Node_BaseAsyncTask` is really easy to get off the ground as it does a ton of the leg work for you.
 
-I left out 2 parts of the HTTP request: a failure delegate, and content pin which I'll leave as an exercise for the viewer.
+I left out 2 parts of the HTTP request: a failure delegate, and content pin (which I’ll leave as an exercise for the viewer).
 
-I was planning a 4th article which would go over making a custom async node from scratch since there are some cases where `UK2Node_BaseAsyncTask` won't work (e.g. if you have delegates that you don't want execution pins for) and having to put all your node inputs into a single function is quite tedious, however I don't think that has much value and if you *really* need this, studying `UK2Node_BaseAsyncTask` will give you all of the answers you need.
+There are some cases where `UK2Node_BaseAsyncTask` won't work, such as delegates which shouldn't have execution pins. Studying the UK2Node_BaseAsyncTask source should give you all the answers you need.
 
-If you made it this far with your sanity in tact congratulations, I hope you learnt something about K2 nodes.
+If you made it this far with your sanity in tact: congratulations! I hope you've learnt something about K2 nodes.
 
-The full code and working Unreal Engine 5 project for this article is available [here](https://github.com/GamerGambit/gamergambit.github.io/tree/main/code/idk2-301)
+The full code and working Unreal Engine 5 project for this article is available [here](https://github.com/GamerGambit/gamergambit.github.io/tree/main/code/idk2-301).
+
+Special thanks to Daekesh for taking the time to proof this article.
