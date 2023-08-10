@@ -26,6 +26,16 @@ description: "Basic Async K2 Node"
 * TOC
 {:toc}
 
+# Baby Steps
+Before we jump into the moderately deep end its worth noting that there are 2 simpler ways of creating async tasks:
+* Make a `UFUNCTION` with Latent and LatentInfo metadata specifiers and using `FLatentActionManager` to create a latent action.
+* Subclass `UBlueprintAsyncActionBase`.
+
+If you are just interested in creating an async/latent task then those should be your first options, in this order. Both have their pros and cons, neither of which are covered in this article.
+
+## But Why?
+While the 2 options above will generate a Blueprint node for you, subclassing `UK2Node_BaseAsyncTask` gives you full control over the generated node. This includes control over how and what pins are generated, how the node is expanded, or a use a [custom widget](https://docs.unrealengine.com/4.27/en-US/API/Runtime/Engine/EdGraph/UEdGraphNode/CreateVisualWidget/) for the node, which can greatly improve the usability of complex nodes.
+
 # Latentcy
 
 If you have used Blueprints for any amount of time you have almost certainly come across so-called "Latent" nodes which are denoted by a clock face in the top right corner. These latent nodes don't continue execution immediately but some time later on. In the case of the "Delay" node, execution continues after the specified "Duration" parameter.
