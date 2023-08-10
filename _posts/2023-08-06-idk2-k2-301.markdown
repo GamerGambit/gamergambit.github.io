@@ -5,21 +5,11 @@ date:   "2023-08-06"
 categories: idk2
 tags: unreal-engine k2 async latent
 description: "Basic Async K2 Node"
+series: idk2_series
+series_index: 2
 ---
 
-<nav aria-label="Page navigation example">
-  <ul class="pagination justify-content-center">
-    <li class="page-item">
-      <a class="page-link" href="{% link _posts/2023-07-27-idk2-k2-201.markdown %}">Previous</a>
-    </li>
-    <li class="page-item"><a class="page-link" href="{% link _posts/2023-07-13-idk2-k2-101.markdown %}">1</a></li>
-    <li class="page-item"><a class="page-link" href="{% link _posts/2023-07-27-idk2-k2-201.markdown %}">2</a></li>
-    <li class="page-item active"><a class="page-link" href="#">3</a></li>
-    <li class="page-item">
-      <a class="page-link disabled" href="#" tabindex="-1" aria-disabled="true">Next</a>
-    </li>
-  </ul>
-</nav>
+{% include series_nav.html %}
 
 # Chapters
 {:.no_toc}

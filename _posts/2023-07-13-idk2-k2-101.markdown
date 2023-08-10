@@ -5,6 +5,8 @@ date:   "2023-07-13"
 categories: idk2
 tags: unreal-engine k2
 description: "Introduction to Blueprint K2 nodes"
+series: idk2_series
+series_index: 0
 ---
 
 <div class="alert alert-info">
@@ -13,21 +15,7 @@ description: "Introduction to Blueprint K2 nodes"
     <p class="mb-0">Before proceeding, this series will assume a solid foundation in C++ and good knowledge of the Unreal Engine C++ framework.</p>
 </div>
 
----
-
-<nav aria-label="Page navigation example">
-  <ul class="pagination justify-content-center">
-    <li class="page-item disabled">
-      <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-    </li>
-    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="{% link _posts/2023-07-27-idk2-k2-201.markdown %}">2</a></li>
-    <li class="page-item"><a class="page-link" href="{% link _posts/2023-08-06-idk2-k2-301.markdown %}">3</a></li>
-    <li class="page-item">
-      <a class="page-link" href="{% link _posts/2023-07-27-idk2-k2-201.markdown %}">Next</a>
-    </li>
-  </ul>
-</nav>
+{% include series_nav.html %}
 
 # History
 Kismet is a node based visual scripting system. It was introduced with Unreal Engine 3 in 2006 and a new version (shortened to K2) was released with Unreal Engine 4 in 2014. The new version, K2,  is the focus of this series.

@@ -1,0 +1,36 @@
+{% assign data = site.data[page.series] %}
+
+{% if page.series_index == 0 %}
+{% assign prevClass = "disabled" %}
+{% else %}
+{% assign prevIndex = page.series_index | minus: 1 %}
+{% endif %}
+
+{% if page.series_index >= page.series.posts.size %}
+{% assign nextClass = "disabled" %}
+{% else %}
+{% assign nextIndex = page.series_index | plus: 1 %}
+{% endif %}
+
+<nav>
+    <ul class="pagination justify-content-center">
+      <li class="page-item">
+        <a class="page-link {{ prevClass }}" href="{{ data.posts[prevIndex] | relative_url }}">Previous</a>
+      </li>
+
+        {% for p in data.posts %}
+        {% if page.series_index == forloop.index0 %}
+        {% assign thisClass = "active" %}
+        {% assign href = "#" %}
+        {% else %}
+        {% assign thisClass = null %}
+        {% assign href = p | relative_url %}
+        {% endif %}
+        <li class="page-item {{ thisClass }}"><a class="page-link" href="{{ href }}">{{ forloop.index }}</a></li>
+        {% endfor %}
+
+      <li class="page-item">
+        <a class="page-link {{ nextClass }}" href="{{ data.posts[nextIndex] | relative_url }}">Next</a>
+      </li>
+    </ul>
+  </nav>
