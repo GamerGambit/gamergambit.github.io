@@ -5,8 +5,6 @@ date:   "2023-07-13"
 categories: idk2
 tags: unreal-engine k2
 description: "Introduction to Blueprint K2 nodes"
-series: idk2_series
-series_index: 0
 ---
 
 <div class="alert alert-info">
@@ -15,7 +13,7 @@ series_index: 0
     <p class="mb-0">Before proceeding, this series will assume a solid foundation in C++ and good knowledge of the Unreal Engine C++ framework.</p>
 </div>
 
-{% include series_nav.html %}
+{% include category_nav.html %}
 
 # History
 Kismet is a node based visual scripting system. It was introduced with Unreal Engine 3 in 2006 and a new version (shortened to K2) was released with Unreal Engine 4 in 2014. The new version, K2,  is the focus of this series.

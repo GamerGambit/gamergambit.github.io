@@ -5,11 +5,9 @@ date:   "2023-07-27"
 categories: idk2
 tags: unreal-engine k2
 description: "Basic K2 Node"
-series: idk2_series
-series_index: 1
 ---
 
-{% include series_nav.html %}
+{% include category_nav.html %}
 
 # Chapters
 {:.no_toc}

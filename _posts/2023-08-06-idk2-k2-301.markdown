@@ -5,11 +5,9 @@ date:   "2023-08-06"
 categories: idk2
 tags: unreal-engine k2 async latent
 description: "Basic Async K2 Node"
-series: idk2_series
-series_index: 2
 ---
 
-{% include series_nav.html %}
+{% include category_nav.html %}
 
 # Chapters
 {:.no_toc}
