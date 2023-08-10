@@ -52,7 +52,7 @@ The proxy class is a `UObject` that holds dynamic multicast delegates plus whate
 
 The proxy class for our HTTP Get request is pretty simple. We need a factory function to create our proxy object, the url for the request, and a delegate for when the request is done.
 
-The name of the factory function is what `UK2Node_BaseAsynTask` uses to name our node and can be overwritten using the [DisplayName meta attribute](https://benui.ca/unreal/ufunction/#displayname).
+The name of the factory function is what `UK2Node_BaseAsyncTask` uses to name our node and can be overwritten using the [DisplayName meta attribute](https://benui.ca/unreal/ufunction/#displayname).
 
 {% highlight cpp %}
 #pragma once
@@ -183,7 +183,7 @@ We can extend this behavior to our delegate too. If we add parameters to our del
 </div>
 
 # Expansion
-Lets compile a Blueprint with our node and see what gets created.
+Let's compile a Blueprint with our node and see what gets created.
 
 <div class="row">
     <div class="col-md"><iframe class="w-100" style="height: 41.2rem !important;" src="https://blueprintue.com/render/zg4pwyeg/" scrolling="no" allowfullscreen></iframe></div>
