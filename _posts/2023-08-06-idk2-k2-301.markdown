@@ -247,7 +247,7 @@ As mentioned twice now, `UK2Node_BaseAsyncTask` is really easy to get off the gr
 
 I left out 2 parts of the HTTP request: a failure delegate, and content pin (which I’ll leave as an exercise for the viewer).
 
-There are some cases where `UK2Node_BaseAsyncTask` won't work, such as delegates which shouldn't have execution pins. Studying the UK2Node_BaseAsyncTask source should give you all the answers you need.
+There are some cases where `UK2Node_BaseAsyncTask` are not suitable such as delegates which you want hidden, multiple delegates with different signatures, or you don't want to use a proxy `UObject`. If these limitations are a concern, studying the `UK2Node_BaseAsyncTask` source should give you all the answers you need.
 
 If you made it this far with your sanity in tact: congratulations! I hope you've learnt something about K2 nodes.
 
